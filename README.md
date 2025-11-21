@@ -24,9 +24,9 @@
 
 # Grafana Dashboard Sample:
 
-![Grafana Dashboard](.doc/Grafana_Dashboard_all.png)
+![Grafana Dashboard](/doc/Grafana_Dashboard_all.png)
 
-[json Dashboard file](./doc/Dashboard_final.json)
+[json Dashboard file](/doc/Dashboard_final.json)
 
 # TODO
  - [ ] Cleanup
