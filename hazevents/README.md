@@ -7,8 +7,8 @@ The application will query via API calls all recent earthquakes and fire within 
 > still learning Rust... (⌒‿⌒)/
 
 ## Built with & Requirements
-
-* [![Rust](https://github.com/lunarust/hazevents/actions/workflows/rust.yml/badge.svg?branch=main)](https://github.com/lunarust/hazevents/actions/workflows/rust.yml)
+https://github.com/lunarust/wobbles_hazards/tree/main/flux2post/.github/workflows
+* [![Rust](https://github.com/lunarust/hazevents/actions/workflows/rust.yml/badge.svg?branch=main)](https://github.com/lunarust/wobbles_hazards/tree/main/flux2post/.github/workflows/rust.yml)
 * PostgreSQL
 * Grafana
 
@@ -120,20 +120,6 @@ Quake:
 }
 ```
 </details>
-
-
-## Flood
-
-On hold,
-
-Open meteo doesn't allow coordbox, a single coordinates looks messy
-Copernicus seems to be working on a newer version, public dataset are flagged as offline
-
-https://eonet.gsfc.nasa.gov/docs/v2.1
-https://api.nasa.gov/
-
-
-https://eonet.gsfc.nasa.gov/api/v2.1/events?status=open&limit=5
 
 
 ## Database:
