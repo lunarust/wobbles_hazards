@@ -22,6 +22,7 @@ jobs:
     - name: Run tests hazevents
       run: cargo test --verbose
       working-directory: hazevents
+      
     - uses: actions/checkout@v4
     - name: Build flux2post
       run: cargo build --verbose
@@ -30,3 +31,10 @@ jobs:
       run: cargo test --verbose
       working-directory: flux2post
 
+    - uses: actions/checkout@v4
+    - name: Build wobblealert
+      run: cargo build --verbose
+      working-directory: wobblealert
+    - name: Run tests wobblealert
+      run: cargo test --verbose
+      working-directory: wobblealert
