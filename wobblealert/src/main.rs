@@ -9,7 +9,7 @@ mod settings;
 mod earthquake;
 mod influxdb;
 mod firms;
-mod eonet;
+
 
 lazy_static! {
     pub static ref CONFIG: settings::Settings =
