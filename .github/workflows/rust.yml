@@ -16,6 +16,37 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Build hazevents
+      run: cargo build --verbose
+      working-directory: hazevents
+    - name: Run tests hazevents
+      run: cargo test --verbose
+      working-directory: hazevents
+    - uses: actions/checkout@v4
+    - name: Build flux2post
+      run: cargo build --verbose
+      working-directory: flux2post
+    - name: Run tests flux2post
+      run: cargo test --verbose
+      working-directory: flux2post
+name: Rust
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
     - name: Build
       run: cargo build --verbose
       working-directory: hazevents
