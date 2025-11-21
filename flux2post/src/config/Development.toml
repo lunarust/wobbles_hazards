@@ -1,0 +1,16 @@
+[log]
+level = "info"
+
+[dbflux]
+dburl="http://192.168.1.1:8086"
+dbport=8086
+dbapi="xxx"
+dbname="wobbly"
+dborg="country.local"
+
+[dbpg]
+dburl="dbhost.country.local"
+dbport=5432
+dbuser="pguser"
+dbname="dbname"
+dbpassword="dbpass"

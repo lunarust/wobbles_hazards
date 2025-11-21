@@ -1,0 +1,26 @@
+[log]
+level = "info"
+
+[location]
+longitude = "<your_longitude>"
+latitude = "<your_latitude>"
+radius = "520"
+file = "/home/<user>/.config/i3/alerti3"
+
+[db]
+dburl="http://<influxdb_url>:<influxdb_port>"
+dbport=8086
+dbapi="<influxdbAPIKey>"
+dbname="wobbly"
+dborg="greece.local"
+
+[color]
+green="#00FF66"
+yellow="#FFFF66"
+orange="#FFCC33"
+red="#CC3366"
+
+[nasa]
+mapkey="<KEYMAP>"
+coordbox="-180,-80,180,80"
+#coordbox="30,-20,60,40"

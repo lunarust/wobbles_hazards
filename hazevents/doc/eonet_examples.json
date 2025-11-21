@@ -1,0 +1,167 @@
+{
+	"title": "EONET Events",
+	"description": "Natural events from EONET.",
+	"link": "https://eonet.gsfc.nasa.gov/api/v2.1/events",
+	"events": [
+		{
+			"id": "EONET_15898",
+			"title": "Tropical Cyclone Fina",
+            "description": "",
+			"link": "https://eonet.gsfc.nasa.gov/api/v2.1/events/EONET_15898",
+			"categories": [
+				{
+					"id": 10,
+					"title": "Severe Storms"
+				}
+			],
+			"sources": [
+				{
+					"id": "JTWC",
+					"url": "https://www.metoc.navy.mil/jtwc/products/sh0526.tcw"
+				}
+
+			],
+			"geometries": [
+				{
+					"date": "2025-11-18T00:00:00Z",
+					"type": "Point",
+					"coordinates": [ 130.5, -10.2 ]
+				},
+				{
+					"date": "2025-11-18T06:00:00Z",
+					"type": "Point",
+					"coordinates": [ 130.8, -10 ]
+				},
+				{
+					"date": "2025-11-18T12:00:00Z",
+					"type": "Point",
+					"coordinates": [ 131.2, -9.9 ]
+				},
+				{
+					"date": "2025-11-18T18:00:00Z",
+					"type": "Point",
+					"coordinates": [ 131.8, -9.8 ]
+				},
+				{
+					"date": "2025-11-19T00:00:00Z",
+					"type": "Point",
+					"coordinates": [ 132.4, -9.5 ]
+				},
+				{
+					"date": "2025-11-19T06:00:00Z",
+					"type": "Point",
+					"coordinates": [ 132.6, -9.7 ]
+				}
+
+			]
+		},
+		{
+			"id": "EONET_15895",
+			"title": "RX Matagorda 5365 Prescribed Fire, Matagorda, Texas",
+            "description": "",
+			"link": "https://eonet.gsfc.nasa.gov/api/v2.1/events/EONET_15895",
+			"categories": [
+				{
+					"id": 8,
+					"title": "Wildfires"
+				}
+			],
+			"sources": [
+				{
+					"id": "IRWIN",
+					"url": "https://irwin.doi.gov/observer/incidents/60346a5a-75f5-4072-8b19-859df8d95465"
+				}
+
+			],
+			"geometries": [
+				{
+					"date": "2025-11-17T09:53:00Z",
+					"type": "Point",
+					"coordinates": [ -96.08379714, 28.65476614 ]
+				}
+
+			]
+		},
+		{
+			"id": "EONET_15893",
+			"title": "1039 Wildfire, Barry, Missouri",
+            "description": "10 Miles S from Cassville, MO",
+			"link": "https://eonet.gsfc.nasa.gov/api/v2.1/events/EONET_15893",
+			"categories": [
+				{
+					"id": 8,
+					"title": "Wildfires"
+				}
+			],
+			"sources": [
+				{
+					"id": "IRWIN",
+					"url": "https://irwin.doi.gov/observer/incidents/a4e57f3d-b22f-48e3-bfa7-c37eb7f45ffa"
+				}
+
+			],
+			"geometries": [
+				{
+					"date": "2025-11-17T09:11:00Z",
+					"type": "Point",
+					"coordinates": [ -93.853133, 36.554083 ]
+				}
+
+			]
+		},
+		{
+			"id": "EONET_15894",
+			"title": "Barfoot Fire Wildfire, Dinwiddie, Virginia",
+            "description": "8 Miles W from McKenney, VA",
+			"link": "https://eonet.gsfc.nasa.gov/api/v2.1/events/EONET_15894",
+			"categories": [
+				{
+					"id": 8,
+					"title": "Wildfires"
+				}
+			],
+			"sources": [
+				{
+					"id": "IRWIN",
+					"url": "https://irwin.doi.gov/observer/incidents/51cb1146-9b1a-4902-977a-7d67ebe4e02b"
+				}
+
+			],
+			"geometries": [
+				{
+					"date": "2025-11-17T07:29:00Z",
+					"type": "Point",
+					"coordinates": [ -77.8686111, 37.02 ]
+				}
+
+			]
+		},
+		{
+			"id": "EONET_15896",
+			"title": "Cache River State Nature Area RX Prescribed Fire, Johnson, Illinois",
+            "description": "",
+			"link": "https://eonet.gsfc.nasa.gov/api/v2.1/events/EONET_15896",
+			"categories": [
+				{
+					"id": 8,
+					"title": "Wildfires"
+				}
+			],
+			"sources": [
+				{
+					"id": "IRWIN",
+					"url": "https://irwin.doi.gov/observer/incidents/678c76df-8df2-49d2-a08b-2f2310b1aa9c"
+				}
+
+			],
+			"geometries": [
+				{
+					"date": "2025-11-16T08:31:00Z",
+					"type": "Point",
+					"coordinates": [ -88.917, 37.367 ]
+				}
+
+			]
+		}
+	]
+}
