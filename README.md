@@ -33,4 +33,4 @@
  - [ ] DB all queries and init script
  - [ ] wobblealert doesn't build yet on github, might be cache related.
 
-# MIT License
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

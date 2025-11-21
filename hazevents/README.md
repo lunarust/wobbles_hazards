@@ -135,6 +135,3 @@ Quake:
 
 
 ## Acknowledgments
-
-
-# MIT License

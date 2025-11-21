@@ -33,8 +33,3 @@ cargo run
 ```
 
 ## Acknowledgments
-
-
-# MIT License
-
-[![Rust](https://github.com/lunarust/flux2post/actions/workflows/rust.yml/badge.svg?branch=main)](https://github.com/lunarust/flux2post/actions/workflows/rust.yml)

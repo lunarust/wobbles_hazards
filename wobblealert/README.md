@@ -318,6 +318,3 @@ But you can configure the format of an alert either in alert > Media.
 </details>
 
 ## Acknowledgments
-
-
-# MIT License
