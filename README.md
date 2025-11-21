@@ -5,11 +5,11 @@
 1. wobblealert
    fetching earthquakes & fires from usgs.gov & firms.
    Storing data into influxDB2
-   [![Rust](https://github.com/lunarust/wobbles_hazards/blob/main/.github/workflows/rust.yml/badge.svg?branch=main)](https://github.com/lunarust/wobbles_hazards/blob/main/.github/workflows/rust.yml)
 
 2. hazevents
    fetching several type of disaters recorded from eonet/NASA
    Storing data into PostgreSQL
+   [![Rust](https://github.com/lunarust/wobbles_hazards/actions/workflows/rust.yml/badge.svg?branch=main)](https://github.com/lunarust/wobbles_hazards/actions/workflows/rust.yml)
 
 
 3. flux2post
