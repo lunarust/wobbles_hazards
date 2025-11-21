@@ -321,5 +321,3 @@ But you can configure the format of an alert either in alert > Media.
 
 
 # MIT License
-
-[![Rust](https://github.com/lunarust/wobblealert/actions/workflows/rust.yml/badge.svg?branch=main)](https://github.com/lunarust/wobblealert/actions/workflows/rust.yml)

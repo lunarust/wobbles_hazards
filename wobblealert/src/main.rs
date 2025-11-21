@@ -10,7 +10,6 @@ mod earthquake;
 mod influxdb;
 mod firms;
 
-
 lazy_static! {
     pub static ref CONFIG: settings::Settings =
     settings::Settings::new().expect("config can't be loaded ٩(＾◡＾)۶, you are doomed!!!");
