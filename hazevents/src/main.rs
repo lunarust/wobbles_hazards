@@ -26,15 +26,13 @@ async fn main() {
        dbpassword: CONFIG.dbpg.dbpassword.clone(),
    };
 
-   pgdb::Pgdb::check_connection(&pgdb).await
+  pgdb::Pgdb::check_connection(&pgdb).await
+       .map_err(|err| println!("{:?}", err)).ok();
+
+  let start_date = pgdb::Pgdb::get_last_record(&pgdb).await.unwrap();
+      
+   generic::logthis(format!("Main calling next EONET Starting from {:?}", start_date).as_str(), "INFO");
+
+   eonet::handle_call(pgdb, CONFIG.clone(), start_date.clone()).await
         .map_err(|err| println!("{:?}", err)).ok();
-
-  //pgdb::Pgdb::insert_event_test(&pgdb).await
-  //     .map_err(|err| println!("{:?}", err)).ok();
-
-   generic::logthis(format!("Main calling next EONET ").as_str(), "INFO");
-
-   eonet::handle_call(pgdb, CONFIG.clone()).await
-        .map_err(|err| println!("{:?}", err)).ok();
-
 }

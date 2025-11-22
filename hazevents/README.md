@@ -7,10 +7,9 @@ The application will query via API calls all recent earthquakes and fire within 
 > still learning Rust... (⌒‿⌒)/
 
 ## Built with & Requirements
-https://github.com/lunarust/wobbles_hazards/tree/main/flux2post/.github/workflows
-* [![Rust](https://github.com/lunarust/hazevents/actions/workflows/rust.yml/badge.svg?branch=main)](https://github.com/lunarust/wobbles_hazards/tree/main/flux2post/.github/workflows/rust.yml)
+
+* Rust
 * PostgreSQL
-* Grafana
 
 ## Getting started
 
@@ -20,9 +19,6 @@ Install Rust on your local machine| to do so please follow the official document
 [Rust get started](https://www.rust-lang.org/learn/get-started)
 
 ### Get a local copy using git
-```bash
-git clone git@github.com:lunarust/wobblealert.git
-```
 
 ### Properties
 Copy the file Development.toml to Default.toml and replace the values between angle brackets.
@@ -39,8 +35,8 @@ cargo run
 ### Earthquakes
 
 - Source:
-  - [USGS](https://www.usgs.gov/programs/earthquake-hazards)
-  - [Api DOC](https://earthquake.usgs.gov/fdsnws/event/1/)
+  - [Earth Observatory Natural Event Tracker](https://eonet.gsfc.nasa.gov)
+  - [Api DOC](https://eonet.gsfc.nasa.gov/docs/v3)
 
 - Data format:
 
@@ -49,8 +45,17 @@ API receives JSON.
 Quake:
 |  Column |  Type  |  Origin  |  Description   |
 |---------|--------|----------|----------------|
-|url|String|API|Link to the event|
-|alert|String|Mapped| |
+|id|int|API|Unique ID|
+|title|String|API|Title of the event|
+|description|String|API|Description of the event|
+|link|String|API|Link|
+|closed|Null or DT|API|Null or date/time|
+|categories|Vec<categories>|API|Title of the event|
+|sources|String|API|Title of the event|
+|geometry|String|API|Title of the event|
+|magnitude||||
+
+
 
 
 <details>
