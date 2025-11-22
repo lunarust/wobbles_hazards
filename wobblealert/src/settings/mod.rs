@@ -32,6 +32,11 @@ pub struct Nasa {
     pub mapkey: String,
     pub coordbox: String,
 }
+#[derive(Debug, Deserialize, Clone)]
+pub struct Alertzy {
+    pub account: String,
+    pub url: String,
+}
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Settings {
@@ -40,6 +45,7 @@ pub struct Settings {
     pub location: Location,
     pub color: Color,
     pub nasa: Nasa,
+    pub alertzy: Alertzy,
 }
 
 impl Settings {

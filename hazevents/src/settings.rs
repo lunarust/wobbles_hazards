@@ -19,6 +19,11 @@ pub struct Dbpg {
     pub dbuser: String,
     pub dbpassword: String,
 }
+#[derive(Debug, Deserialize, Clone)]
+pub struct Alertzy {
+    pub account: String,
+    pub url: String,
+}
 
 
 #[derive(Debug, Deserialize, Clone)]
@@ -26,6 +31,7 @@ pub struct Settings {
     pub env: ENV,
     pub dbpg: Dbpg,
     pub location: Location,
+    pub alertzy: Alertzy,
 }
 
 impl Settings {

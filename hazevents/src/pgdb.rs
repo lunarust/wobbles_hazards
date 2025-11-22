@@ -22,6 +22,40 @@ pub struct Pgdb {
 }
 
 impl Pgdb {
+    pub async fn get_alert_events(&self, dt_start: DateTime<Utc>, distance: i32) -> Result<String, Error> {
+        let query = format!("select distinct category_id, coalesce(distance, 0.0) as distance, count(*) as tot, max(magnitudevalue)
+            from event evt
+            join geometry geo ON (event_id = evt.id)
+            where inserted between '{0}' AND now()
+            and distance < {1}
+            group by 1,2
+            order by 1
+            ", dt_start, distance);
+        let connect_string = format!("host={} port={} user={} password={} dbname={}",
+            &self.dburl, &self.dbport, &self.dbuser, &self.dbpassword, &self.dbname);
+
+        let (client, connection) =
+            tokio_postgres::connect(
+                connect_string.as_str(),
+                    NoTls).await.unwrap();
+
+        tokio::spawn(async move{
+          if let Err(e) = connection.await {
+            eprintln!("{:?}", e);
+          }
+        });
+        let mut message: String = "".to_string();
+
+        let rows = client
+           .query(query.as_str(), &[])
+           .await?;
+           for row in rows {
+               let cat: String = row.get("category_id");
+               let tot: i64 = row.get("tot");
+               message.push_str(format!("{} {}", tot.to_string().as_str(), cat.as_str()).as_str());
+           }
+           Ok(message.to_string())
+    }
     pub async fn get_last_record(&self) -> Result<DateTime<Utc>, Error> {
         let query = "SELECT date FROM eonet_calls ORDER BY date DESC LIMIT 1";
         let connect_string = format!("host={} port={} user={} password={} dbname={}",
@@ -118,11 +152,11 @@ impl Pgdb {
     async fn insert_event(&self, ev: &eonet::Event) -> Result<(), Box<dyn std::error::Error>> {
         let today: DateTime<chrono::Utc> = SystemTime::now().clone().into();
         let query = format!("
-            INSERT INTO event (id, title, description, link, category_id, closed) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')
+            INSERT INTO event (id, title, description, link, category_id, closed, distance) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', {6})
             ON CONFLICT (id)
-            DO UPDATE SET title = '{1}', description = '{2}', category_id = '{4}', link = '{3}' WHERE event.id = '{0}';",
+            DO UPDATE SET title = '{1}', description = '{2}', category_id = '{4}', link = '{3}', distance = {6} WHERE event.id = '{0}';",
             &ev.id, &ev.title, &ev.description.clone().unwrap_or("".to_string()), &ev.link,
-            &ev.categories[0].id.to_string(), &ev.closed.unwrap_or(today));
+            &ev.categories[0].id.to_string(), &ev.closed.unwrap_or(today), &ev.distance.unwrap_or(0.0));
 
          let res = (&self).connect_insert(query.as_str()).await;
 

@@ -105,6 +105,13 @@ pub async fn handle_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32, 
 
 	//println!("quake list len: {:?}", quake_list.len());
 	if quake_list.len() > 0 {
+       let message_to_send = format!("{} Quakes", quake_list.len());
+       push_phone::push(cfg.alertzy.account.as_str(),
+           cfg.alertzy.url.as_str(), "ALERT",
+           message_to_send.as_str(), "2")
+           .await;
+
+
 		let iterator = (quake_list).iter().next().unwrap();
 		let mut i3_output: String = "".to_string();
 
