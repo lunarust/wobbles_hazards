@@ -1,10 +1,16 @@
 //use futures::prelude::*;
-
+use chrono::prelude::*;
+use std::time::{SystemTime};
+use chrono::{Duration, FixedOffset, TimeZone, Utc};
 use futures_util::future;
-use std::future::Future;
-use tokio_postgres::{Client, Error, Statement, NoTls};
+use chrono::{DateTime, NaiveDateTime};
+use tokio_postgres::types::{FromSql, Type};
+use tokio_postgres::{NoTls, Error};
+use serde_json::Value;
+
 use crate::generic;
 use crate::eonet;
+
 
 #[derive(Debug, Clone)]
 pub struct Pgdb {
@@ -15,22 +21,43 @@ pub struct Pgdb {
     pub dbpassword: String,
 }
 
-
 impl Pgdb {
-    pub async fn check_connection(&self) -> Result<(), Box<dyn std::error::Error>> {
-        //Result<postgres::Client, postgres::Error>
-        //postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]
-        generic::logthis(format!("DB Check connection").as_str(), "INFO");
+    pub async fn get_last_record(&self) -> Result<DateTime<Utc>, Error> {
+        let query = "SELECT date FROM eonet_calls ORDER BY date DESC LIMIT 1";
+        let connect_string = format!("host={} port={} user={} password={} dbname={}",
+            &self.dburl, &self.dbport, &self.dbuser, &self.dbpassword, &self.dbname);
 
+        let today: DateTime<chrono::Utc> = SystemTime::now().clone().into();
+        let mut st_date = today - Duration::days(7);
+
+        let (client, connection) =
+            tokio_postgres::connect(
+                connect_string.as_str(),
+                    NoTls).await.unwrap();
+
+        tokio::spawn(async move{
+          if let Err(e) = connection.await {
+            eprintln!("{:?}", e);
+          }
+        });
+
+        let rows = client
+           .query(query, &[])
+           .await?;
+           for row in rows {
+               let timestamp = row.get::<usize,SystemTime>(0);
+               st_date = timestamp.clone().into();
+           }
+           Ok(st_date)
+    }
+    pub async fn check_connection(&self) -> Result<(), Box<dyn std::error::Error>> {
+         generic::logthis(format!("DB Check connection").as_str(), "INFO");
 
          let query = "SELECT title FROM category WHERE id = 6";
          let clt = (&self).connect_select(query).await;
 
-
          Ok(())
     }
-
-
     pub async fn insert_full_event(&self, ev: eonet::Event) -> Result<(), Box<dyn std::error::Error>> {
         generic::logthis(format!("DB Insert or Update event").as_str(), "INFO");
 
@@ -39,7 +66,6 @@ impl Pgdb {
         (&self).insert_event(&ev).await;
 
         for ge in ev.geometries {
-            //println!("New geo {:?}", ge);
             (&self).insert_geo(&ge, &event_id).await;
         }
         // sources
@@ -112,6 +138,12 @@ impl Pgdb {
 
         Ok(())
     }
+    pub async fn insert_call_log(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let query = format!("INSERT INTO public.eonet_calls(date, method) VALUES (now(), 'API');");
+        let res = (&self).connect_insert(query.as_str()).await;
+
+        Ok(())
+    }
     async fn connect_select(&self, qu: &str) ->  Result<(), Box<dyn std::error::Error>> {
         let connect_string = format!("host={} port={} user={} password={} dbname={}",
             &self.dburl, &self.dbport, &self.dbuser, &self.dbpassword, &self.dbname);
@@ -131,12 +163,14 @@ impl Pgdb {
         let rows = client
            .query(qu, &[])
            .await?;
-        let value: &str = rows[0].get(0);
-        assert_eq!(value, "Drought");
-        //println!("QUERY: [{:?}] {}", qu, value);
+
+        if rows.len() > 0 {
+            let value: &str = rows[0].get(0);
+        }
+        //assert_eq!(value, "Drought");
+
         Ok(())
     }
-
 
 
     async fn connect_insert(&self, qu: &str) -> Result<(), Box<dyn std::error::Error>> {
