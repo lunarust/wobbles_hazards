@@ -30,9 +30,19 @@ async fn main() {
        .map_err(|err| println!("{:?}", err)).ok();
 
   let start_date = pgdb::Pgdb::get_last_record(&pgdb).await.unwrap();
-      
+
    generic::logthis(format!("Main calling next EONET Starting from {:?}", start_date).as_str(), "INFO");
 
-   eonet::handle_call(pgdb, CONFIG.clone(), start_date.clone()).await
+   eonet::handle_call(&pgdb, CONFIG.clone(), start_date.clone()).await
         .map_err(|err| println!("{:?}", err)).ok();
+
+   // Check if I have to call mama
+   let message_to_send = pgdb::Pgdb::get_alert_events(&pgdb, start_date, CONFIG.location.radius).await
+        .map_err(|err| println!("{:?}", err)).ok();
+
+   if !message_to_send.clone().unwrap_or_default().is_empty() {
+       generic::logthis(format!("Sending alert to phone {:?}", message_to_send.clone().unwrap()).as_str(), "INFO");
+
+       push_phone::push(&CONFIG.alertzy.account, &CONFIG.alertzy.url, "ALERT", message_to_send.unwrap().as_str(), "2").await;
+   }
 }

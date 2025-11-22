@@ -27,3 +27,6 @@ tokio = { version = "1.48.0", features = ["full"] }
 
 futures = "0.3.30"
 futures-util = "0.3.31"
+
+
+push_phone = { version = "0.1.0", path = "../push_phone" }

@@ -51,7 +51,7 @@ pub struct Geometry {
 }
 
 
-pub async fn handle_call(pgdb: pgdb::Pgdb, cfg: settings::Settings, dt_start: DateTime<Utc> ) ->  Result<()> {
+pub async fn handle_call(pgdb: &pgdb::Pgdb, cfg: settings::Settings, dt_start: DateTime<Utc> ) ->  Result<()> {
     generic::logthis(format!("EONET: Entering Handle Call").as_str(), "INFO");
 
     let home = Location::new(cfg.location.latitude, cfg.location.longitude);

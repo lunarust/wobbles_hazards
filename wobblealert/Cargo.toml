@@ -30,3 +30,7 @@ influxdb2-derive = "0.1.1"
 num-traits = "0.2"
 
 futures = "0.3.30"
+
+
+
+push_phone = { version = "0.1.0", path = "../push_phone" }
