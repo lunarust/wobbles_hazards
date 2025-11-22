@@ -91,13 +91,13 @@ pub async fn handle_call(mapkey: String, coordbox: String, lg: f64, lt: f64, rd:
       }
     }
     generic::logthis(format!("Events recorded: {:?}", ct).as_str(), "INFO");
-
-   let message_to_send = format!("{} Fires", ct.to_string().as_str());
-   push_phone::push(cfg.alertzy.account.as_str(),
-       cfg.alertzy.url.as_str(), "ALERT",
-       message_to_send.as_str(), "2")
-       .await;
-
+    if ct > 0 {
+    let message_to_send = format!("{} Fires", ct.to_string().as_str());
+        push_phone::push(cfg.alertzy.account.as_str(),
+           cfg.alertzy.url.as_str(), "ALERT",
+           message_to_send.as_str(), "2")
+           .await;
+    }
     //println!("FIRMS: {} event", ct);
     let _res = influxdb::Influxdb::dump_fire(&inflx.clone(), fire_list).await;
 
