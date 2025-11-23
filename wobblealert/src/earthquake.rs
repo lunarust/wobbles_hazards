@@ -61,7 +61,7 @@ pub async fn handle_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32, 
 
 	let duration_since_epoch = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap();
 	let timestamp_nanos = duration_since_epoch.as_nanos(); // u128
-	let res = run_call(stdt, endt, lg, lt, rd).await;
+    let res = run_call(stdt, endt, lg, lt, rd, cfg.nasa.europebox).await;
 
 	let mut update_event: String = "".to_string();
 
@@ -85,6 +85,8 @@ pub async fn handle_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32, 
 		let home = Location::new(lt, lg);
 		let dist = (home.haversine_distance_to(&quake_location).meters()) / 1000.0;
 		let nano_time = (el.properties.time)*1000000;
+        let message_to_send = format!("Dist. {}km, Mag {} ",
+           dist, el.properties.mag);
 
 	    let qu: influxdb::Quake = influxdb::Quake {
             url: el.properties.url.clone().unwrap_or("".to_string()).clone(),
@@ -99,19 +101,20 @@ pub async fn handle_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32, 
 	    };
 	    quake_list.push(qu);
 
+
+        push_phone::push(cfg.alertzy.account.as_str(),
+           cfg.alertzy.url.as_str(),
+           message_to_send.as_str(),
+           "Quake alert",
+            "2")
+           .await;
+
 		index = index+1;
 		update_event = el.properties.code.clone().unwrap_or("".to_string()).clone();
 	}
 
 	//println!("quake list len: {:?}", quake_list.len());
 	if quake_list.len() > 0 {
-       let message_to_send = format!("{} Quakes", quake_list.len());
-       push_phone::push(cfg.alertzy.account.as_str(),
-           cfg.alertzy.url.as_str(), "ALERT",
-           message_to_send.as_str(), "2")
-           .await;
-
-
 		let iterator = (quake_list).iter().next().unwrap();
 		let mut i3_output: String = "".to_string();
 
@@ -139,7 +142,6 @@ pub async fn handle_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32, 
 				iterator.magnitude,
 				iterator.distance).as_str());
 
-        //println!("EARTHQUAKE ... i3 updating the old 2024 ref. time: {:?} {:?} File: {:?}", dt_nano_utc, i3_output, output_file);
 	    std::fs::write(format!("{}", output_file), format!("{}", i3_output))
         .expect("Should be able to write to i3 config");
 
@@ -174,14 +176,12 @@ pub async fn handle_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32, 
 	Ok(())
 }
 
-async fn run_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32) -> EventList {
+async fn run_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32, bx: Vec<i32>) -> EventList {
 	//building query
-    let myparam = format!("starttime={}&endtime={}&latitude={}&longitude={}&maxradiuskm={}",
-    	stdt, endt, lt, lg, rd);
-    //let myparam = format!("starttime=2025-06-01T00:00:00&endtime={}&latitude={}&longitude={}&maxradiuskm={}",
-    //		endt, lt, lg, rd);
+    //let myparam = format!("starttime={}&endtime={}&latitude={}&longitude={}&maxradiuskm={}", stdt, endt, lt, lg, rd);
 
-    //println!("Entered async function run_call in earthquake [{}&{}]", RESTURL, myparam);
+    let myparam = format!("starttime={}&endtime={}&minlatitude={}&minlongitude={}&maxlatitude={}&maxlongitude={}",
+        stdt, endt, bx[0], bx[1], bx[2], bx[3]);
 
     let doge: Value = Client::new()
         .get(format!("{}&{}", RESTURL, myparam))

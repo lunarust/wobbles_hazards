@@ -16,7 +16,8 @@
 3. [flux2post](./flux2post/README.md)
    simple code used to copy the data stored in influxDB2 to PostgreSQL.
 
-
+4. [push_phone](./push_phone/README.md)
+   Mini library sending alert to phone using [alertzy](https://alertzy.app/)
 
   _ workflows Builds & tests all 3 subprojects:
    [![Rust](https://github.com/lunarust/wobbles_hazards/actions/workflows/rust.yml/badge.svg?branch=main)](https://github.com/lunarust/wobbles_hazards/actions/workflows/rust.yml)
