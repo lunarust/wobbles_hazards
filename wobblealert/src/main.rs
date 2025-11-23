@@ -44,7 +44,6 @@ async fn main() {
         .await
         .map_err(|err| println!("{:?}", err)).ok();
 
-        
 }
 
 async fn engage(myfile: &str, long: f64, lat: f64, rad: i32, stdate: String) -> Result<(), Box<dyn std::error::Error>> {

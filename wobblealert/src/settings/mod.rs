@@ -31,6 +31,7 @@ pub struct Color {
 pub struct Nasa {
     pub mapkey: String,
     pub coordbox: String,
+    pub europebox: Vec<i32>
 }
 #[derive(Debug, Deserialize, Clone)]
 pub struct Alertzy {

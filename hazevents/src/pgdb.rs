@@ -22,14 +22,17 @@ pub struct Pgdb {
 }
 
 impl Pgdb {
-    pub async fn get_alert_events(&self, dt_start: DateTime<Utc>, distance: i32) -> Result<String, Error> {
-        let query = format!("select distinct category_id, coalesce(distance, 0.0) as distance, count(*) as tot, max(magnitudevalue)
-            from event evt
-            join geometry geo ON (event_id = evt.id)
-            where inserted between '{0}' AND now()
-            and distance < {1}
-            group by 1,2
-            order by 1
+    pub async fn get_alert_events(&self, dt_start: DateTime<Utc>, distance: i32, acct: String, url: String) -> Result<(), Error> {
+
+        let query = format!("WITH ds AS (
+            SELECT DISTINCT category_id, COALESCE(distance, 0.0) AS distance, COUNT(*) AS tot, MAX(magnitudevalue) AS magnitude
+            FROM event evt
+            JOIN geometry geo ON (event_id = evt.id)
+            WHERE inserted BETWEEN '{0}' AND now()
+            AND distance < {1}
+            GROUP BY 1,2
+            ORDER BY 1)
+            SELECT category_id as title, CONCAT(category_id, ' Dist: ', distance, 'km Mag: ', magnitude) as category_id, tot FROM ds
             ", dt_start, distance);
         let connect_string = format!("host={} port={} user={} password={} dbname={}",
             &self.dburl, &self.dbport, &self.dbuser, &self.dbpassword, &self.dbname);
@@ -50,11 +53,19 @@ impl Pgdb {
            .query(query.as_str(), &[])
            .await?;
            for row in rows {
+               let tit: String = row.get("title");
                let cat: String = row.get("category_id");
                let tot: i64 = row.get("tot");
-               message.push_str(format!("{} {}", tot.to_string().as_str(), cat.as_str()).as_str());
+               generic::logthis(format!("Sending alert to phone {:?}", cat).as_str(), "INFO");
+
+               push_phone::push(acct.as_str(), url.as_str(),
+                   cat.as_str(),
+                   tit.as_str()
+                   , "2").await;
+           //message.push_str(format!("{} {}", tot.to_string().as_str(), cat.as_str()).as_str());
            }
-           Ok(message.to_string())
+           //Ok(message.to_string())
+           Ok(())
     }
     pub async fn get_last_record(&self) -> Result<DateTime<Utc>, Error> {
         let query = "SELECT date FROM eonet_calls ORDER BY date DESC LIMIT 1";

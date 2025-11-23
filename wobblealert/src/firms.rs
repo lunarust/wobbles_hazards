@@ -28,14 +28,11 @@ pub async fn handle_call(mapkey: String, coordbox: String, lg: f64, lt: f64, rd:
 
     let inflx = influxdb::Influxdb {
         dburl: cfg.db.dburl,
-   //     dbport: cfg.db.dbport,
         dbname: cfg.db.dbname,
         dborg: cfg.db.dborg,
         dbapi: cfg.db.dbapi,
     };
     let myparam = format!("{}/area/csv/{}/{}/{}/1/{}", RESTURL, mapkey, SAT, coordbox, qudt);
-    //let myparam = format!("{}/area/csv/{}/{}/{}/7/{}", RESTURL, mapkey, SAT, "-180,-80,180,80", "2025-11-07");
-
     //println!("FIRMS: {}", myparam);
     let client = Client::new();
 
@@ -60,18 +57,14 @@ pub async fn handle_call(mapkey: String, coordbox: String, lg: f64, lt: f64, rd:
 
         let quake_location = Location::new(record[0].parse::<f64>().unwrap(), record[1].parse::<f64>().unwrap());
         let disthome = (home.haversine_distance_to(&quake_location).meters()) / 1000.0;
-
-        //let duration_since_epoch = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap();
-        //let timestamp_nanos = duration_since_epoch.as_nanos(); // u128
+        let mag: f64 = record[2].parse::<f64>().unwrap();
 
         if disthome <= rd.to_string().parse::<f64>().unwrap() {
-                //"2025-06-29 00:00:00",
             let bdtest = format!("{} 00:00:00", record[5].to_string());
             let test = NaiveDateTime::parse_from_str(
                 &bdtest,
                 "%Y-%m-%d %H:%M:%S");
             let test_unix = NaiveDateTime::timestamp(&test.unwrap())*1000000000;
-            //println!("Dist {} - dt {:?} >> {}", disthome, bdtest, test_unix);
 
             let fi: influxdb::Fire = influxdb::Fire {
             latitude: record[0].parse::<f64>().unwrap(),
@@ -85,19 +78,23 @@ pub async fn handle_call(mapkey: String, coordbox: String, lg: f64, lt: f64, rd:
             distance: disthome.to_string().parse::<f64>().unwrap(),
             typ: record[14].to_string(),
             time: test_unix as i64,
+
+
         };
-        ct +=1;
+
         fire_list.push(fi);
+        let message_to_send = format!("Dist. {}km, Mag {} ",
+            disthome, mag);
+        ct +=1;
+
+        generic::logthis(format!("Events recorded: {:?}", ct).as_str(), "INFO");
+        push_phone::push(cfg.alertzy.account.as_str(),
+           cfg.alertzy.url.as_str(),
+           message_to_send.as_str(), "Fire alert", "2")
+           .await;
       }
     }
-    generic::logthis(format!("Events recorded: {:?}", ct).as_str(), "INFO");
-    if ct > 0 {
-    let message_to_send = format!("{} Fires", ct.to_string().as_str());
-        push_phone::push(cfg.alertzy.account.as_str(),
-           cfg.alertzy.url.as_str(), "ALERT",
-           message_to_send.as_str(), "2")
-           .await;
-    }
+
     //println!("FIRMS: {} event", ct);
     let _res = influxdb::Influxdb::dump_fire(&inflx.clone(), fire_list).await;
 
