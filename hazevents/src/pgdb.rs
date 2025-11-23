@@ -68,7 +68,7 @@ impl Pgdb {
            Ok(())
     }
     pub async fn get_last_record(&self) -> Result<DateTime<Utc>, Error> {
-        let query = "SELECT date FROM eonet_calls ORDER BY date DESC LIMIT 1";
+        let query = "SELECT date - interval '1 day' FROM eonet_calls ORDER BY date DESC LIMIT 1";
         let connect_string = format!("host={} port={} user={} password={} dbname={}",
             &self.dburl, &self.dbport, &self.dbuser, &self.dbpassword, &self.dbname);
 

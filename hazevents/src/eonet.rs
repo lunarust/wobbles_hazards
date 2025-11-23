@@ -82,7 +82,7 @@ async fn run_call(dt_start: String) -> EonetList {
     let custom_format_today: String = today.format("%Y-%m-%d").to_string();
 
 
-    let myurl = format!("{}?start={}&end={}&days=90",
+    let myurl = format!("{}?start={}&end={}&days=7&status=all",
         RESTURL, dt_start, custom_format_today);
 
     generic::logthis(format!("EONET: Executing API call [{}] FROM {} TO {}", myurl, dt_start, custom_format_today).as_str(), "INFO");
