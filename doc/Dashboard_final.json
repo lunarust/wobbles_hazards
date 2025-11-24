@@ -59,17 +59,20 @@
       },
       "gridPos": {
         "h": 18,
-        "w": 16,
+        "w": 19,
         "x": 0,
         "y": 0
       },
       "id": 1,
       "options": {
         "basemap": {
-          "config": {},
+          "config": {
+            "showLabels": true,
+            "theme": "light"
+          },
           "name": "Layer 0",
           "tooltip": true,
-          "type": "default"
+          "type": "carto"
         },
         "controls": {
           "mouseWheelZoom": true,
@@ -77,7 +80,7 @@
           "showDebug": false,
           "showMeasure": false,
           "showScale": false,
-          "showZoom": true
+          "showZoom": false
         },
         "layers": [
           {
@@ -95,9 +98,10 @@
                   "mode": "mod"
                 },
                 "size": {
+                  "field": "magnitude",
                   "fixed": 10,
-                  "max": 15,
-                  "min": 2
+                  "max": 10,
+                  "min": 1
                 },
                 "symbol": {
                   "fixed": "img/icons/marker/circle.svg",
@@ -134,22 +138,23 @@
               "showLegend": true,
               "style": {
                 "color": {
-                  "fixed": "purple"
+                  "fixed": "dark-red"
                 },
                 "opacity": 0.5,
                 "rotation": {
-                  "fixed": 0,
+                  "fixed": 100,
                   "max": 360,
                   "min": -360,
                   "mode": "mod"
                 },
                 "size": {
+                  "field": "magnitude",
                   "fixed": 10,
-                  "max": 15,
-                  "min": 2
+                  "max": 20,
+                  "min": 10
                 },
                 "symbol": {
-                  "fixed": "img/icons/marker/circle.svg",
+                  "fixed": "img/icons/marker/square.svg",
                   "mode": "fixed"
                 },
                 "symbolAlign": {
@@ -193,9 +198,10 @@
                   "mode": "mod"
                 },
                 "size": {
+                  "field": "magnitude",
                   "fixed": 10,
-                  "max": 15,
-                  "min": 2
+                  "max": 20,
+                  "min": 10
                 },
                 "symbol": {
                   "fixed": "img/icons/marker/circle.svg",
@@ -238,8 +244,9 @@
                   "mode": "mod"
                 },
                 "size": {
+                  "field": "magnitude",
                   "fixed": 10,
-                  "max": 15,
+                  "max": 20,
                   "min": 2
                 },
                 "symbol": {
@@ -287,9 +294,10 @@
                   "mode": "mod"
                 },
                 "size": {
+                  "field": "magnitude",
                   "fixed": 10,
-                  "max": 15,
-                  "min": 2
+                  "max": 100,
+                  "min": 10
                 },
                 "symbol": {
                   "fixed": "img/icons/marker/triangle.svg",
@@ -388,8 +396,8 @@
                 "size": {
                   "field": "magnitude",
                   "fixed": 5,
-                  "max": 30,
-                  "min": 5
+                  "max": 7,
+                  "min": 3
                 },
                 "symbol": {
                   "fixed": "img/icons/marker/circle.svg",
@@ -398,6 +406,11 @@
                 "symbolAlign": {
                   "horizontal": "center",
                   "vertical": "center"
+                },
+                "text": {
+                  "field": "category",
+                  "fixed": "",
+                  "mode": "field"
                 },
                 "textConfig": {
                   "fontSize": 12,
@@ -443,7 +456,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "select coordinates[1] as latitude,\ncoordinates[0] as longitude, \n(select count(*) from geometry sub where sub.event_id = evt.id) as magnitude,\nevt.title as name,\ncat.title as category,\ns.id as source_device,\nevt.id as event_code,\ntype,\ndt\nfrom event evt\nleft join geometry geo ON (event_id = evt.id)\nleft join event_source es ON (es.event_id=evt.id)\nleft join source s ON (es.source_id=s.id)\nleft join category cat ON (evt.category_id=cat.id)\nwhere dt > $__timeFrom()  and dt < $__timeTo() \nand cat.id = 10",
+          "rawSql": "select coordinates[1] as latitude,\ncoordinates[0] as longitude, \n(select count(*) from geometry sub where sub.event_id = evt.id) as magnitude,\nevt.title as name,\ncat.title as category,\ns.id as source_device,\nevt.id as event_code,\ntype,\ndt\nfrom event evt\nleft join geometry geo ON (event_id = evt.id)\nleft join event_source es ON (es.event_id=evt.id)\nleft join source s ON (es.source_id=s.id)\nleft join category cat ON (evt.category_id=cat.id_txt)\nwhere dt > $__timeFrom()  and dt < $__timeTo() \nand cat.id = 10",
           "refId": "A",
           "sql": {
             "columns": [
@@ -472,7 +485,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "select coordinates[1] as latitude,\ncoordinates[0] as longitude, \n(select count(*) from geometry sub where sub.event_id = evt.id) as magnitude,\nevt.title as name,\ncat.title as category,\ns.id as source_device,\nevt.id as event_code,\ntype,\ndt\nfrom event evt\nleft join geometry geo ON (event_id = evt.id)\nleft join event_source es ON (es.event_id=evt.id)\nleft join source s ON (es.source_id=s.id)\nleft join category cat ON (evt.category_id=cat.id)\nwhere dt > $__timeFrom()  and dt < $__timeTo() \nand cat.id = 16",
+          "rawSql": "select coordinates[1] as latitude,\ncoordinates[0] as longitude, \n(select count(*) from geometry sub where sub.event_id = evt.id) as magnitude,\nevt.title as name,\ncat.title as category,\ns.id as source_device,\nevt.id as event_code,\ntype,\ndt\nfrom event evt\nleft join geometry geo ON (event_id = evt.id)\nleft join event_source es ON (es.event_id=evt.id)\nleft join source s ON (es.source_id=s.id)\nleft join category cat ON (evt.category_id=cat.id_txt)\nwhere dt > $__timeFrom()  and dt < $__timeTo() \nand cat.id = 12",
           "refId": "B",
           "sql": {
             "columns": [
@@ -507,7 +520,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "select coordinates[1] as latitude,\ncoordinates[0] as longitude, \n(select count(*) from geometry sub where sub.event_id = evt.id) as magnitude,\nevt.title as name,\ncat.title as category,\ns.id as source_device,\nevt.id as event_code,\ntype,\ndt\nfrom event evt\nleft join geometry geo ON (event_id = evt.id)\nleft join event_source es ON (es.event_id=evt.id)\nleft join source s ON (es.source_id=s.id)\nleft join category cat ON (evt.category_id=cat.id)\nwhere dt > $__timeFrom()  and dt < $__timeTo() \nand cat.id = 15",
+          "rawSql": "select coordinates[1] as latitude,\ncoordinates[0] as longitude, \n(select count(*) from geometry sub where sub.event_id = evt.id) as magnitude,\nevt.title as name,\ncat.title as category,\ns.id as source_device,\nevt.id as event_code,\ntype,\ndt\nfrom event evt\nleft join geometry geo ON (event_id = evt.id)\nleft join event_source es ON (es.event_id=evt.id)\nleft join source s ON (es.source_id=s.id)\nleft join category cat ON (evt.category_id=cat.id_txt)\nwhere dt > $__timeFrom()  and dt < $__timeTo() \nand cat.id = 15",
           "refId": "C",
           "sql": {
             "columns": [
@@ -536,7 +549,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "select coordinates[1] as latitude,\ncoordinates[0] as longitude, \n(select count(*) from geometry sub where sub.event_id = evt.id) as magnitude,\nevt.title as name,\ncat.title as category,\ns.id as source_device,\nevt.id as event_code,\ntype,\ndt\nfrom event evt\nleft join geometry geo ON (event_id = evt.id)\nleft join event_source es ON (es.event_id=evt.id)\nleft join source s ON (es.source_id=s.id)\nleft join category cat ON (evt.category_id=cat.id)\nwhere dt > $__timeFrom()  and dt < $__timeTo() \nand cat.id = 8",
+          "rawSql": "select coordinates[1] as latitude,\ncoordinates[0] as longitude, \n(select count(*) from geometry sub where sub.event_id = evt.id) as magnitude,\nevt.title as name,\ncat.title as category,\ns.id as source_device,\nevt.id as event_code,\ntype,\ndt\nfrom event evt\nleft join geometry geo ON (event_id = evt.id)\nleft join event_source es ON (es.event_id=evt.id)\nleft join source s ON (es.source_id=s.id)\nleft join category cat ON (evt.category_id=cat.id_txt)\nwhere dt > $__timeFrom()  and dt < $__timeTo() \nand cat.id = 8",
           "refId": "D",
           "sql": {
             "columns": [
@@ -565,7 +578,7 @@
           "format": "table",
           "hide": false,
           "rawQuery": true,
-          "rawSql": "select coordinates[1] as latitude,\ncoordinates[0] as longitude, \n(select count(*) from geometry sub where sub.event_id = evt.id) as magnitude,\nevt.title as name,\ncat.title as category,\ns.id as source_device,\nevt.id as event_code,\ntype,\ndt\nfrom event evt\nleft join geometry geo ON (event_id = evt.id)\nleft join event_source es ON (es.event_id=evt.id)\nleft join source s ON (es.source_id=s.id)\nleft join category cat ON (evt.category_id=cat.id)\nwhere dt > $__timeFrom()  and dt < $__timeTo() \nand cat.id = 9",
+          "rawSql": "select coordinates[1] as latitude,\ncoordinates[0] as longitude, \n(select count(*) from geometry sub where sub.event_id = evt.id) as magnitude,\nevt.title as name,\ncat.title as category,\ns.id as source_device,\nevt.id as event_code,\ntype,\ndt\nfrom event evt\nleft join geometry geo ON (event_id = evt.id)\nleft join event_source es ON (es.event_id=evt.id)\nleft join source s ON (es.source_id=s.id)\nleft join category cat ON (evt.category_id=cat.id_txt)\nwhere dt > $__timeFrom()  and dt < $__timeTo() \nand cat.id = 9",
           "refId": "E",
           "sql": {
             "columns": [
@@ -708,9 +721,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 8,
-        "x": 16,
+        "h": 5,
+        "w": 5,
+        "x": 19,
         "y": 0
       },
       "id": 2,
@@ -736,7 +749,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "with al as (\nselect 'fire' as category, count(*) as evnt, time\nfrom fire group by time, category\n\tunion\nselect 'quake' as category, count(*) as evnt, time\nfrom quake group by time, category\n\tunion\nselect cat.title as category, count(evt.id) as evnt, dt as time\n\tfrom event evt\n\tjoin geometry geo ON (event_id = evt.id)\n\tjoin category cat ON (evt.category_id=cat.id) group by cat.title, dt\n\t)\n\tselect category, evnt, time from al\n  where time > $__timeFrom()  and time < $__timeTo()",
+          "rawSql": "with al as (\nselect 'fire' as category, count(*) as evnt, to_date(TO_CHAR(time, 'YYYY-MM-DD'), 'YYYY-MM-DD') as time\nfrom fire group by to_date(TO_CHAR(time, 'YYYY-MM-DD'), 'YYYY-MM-DD'), category\nunion\nselect 'quake' as category, count(*) as evnt, to_date(TO_CHAR(time, 'YYYY-MM-DD'), 'YYYY-MM-DD') as time\nfrom quake group by to_date(TO_CHAR(time, 'YYYY-MM-DD'), 'YYYY-MM-DD'), category\nunion\nselect evt.category_id as category, count(evt.id) as evnt, to_date(TO_CHAR(dt, 'YYYY-MM-DD'), 'YYYY-MM-DD') as time\nfrom event evt\njoin geometry geo ON (event_id = evt.id)\ngroup by evt.category_id, to_date(TO_CHAR(dt, 'YYYY-MM-DD'), 'YYYY-MM-DD') \n)\nselect category, evnt, time from al\n  where time > $__timeFrom()  and time < $__timeTo()",
           "refId": "A",
           "sql": {
             "columns": [
@@ -822,10 +835,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 8,
-        "x": 16,
-        "y": 9
+        "h": 12,
+        "w": 5,
+        "x": 19,
+        "y": 5
       },
       "id": 3,
       "options": {
@@ -839,9 +852,9 @@
           "placement": "right",
           "showLegend": false
         },
-        "orientation": "auto",
-        "showValue": "auto",
-        "stacking": "normal",
+        "orientation": "horizontal",
+        "showValue": "always",
+        "stacking": "none",
         "tooltip": {
           "mode": "single",
           "sort": "none"
@@ -860,7 +873,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "with al as (\nselect 'fire' as category, count(*) as evnt, time \nfrom fire group by time, category\n\tunion\nselect 'quake' as category, count(*) as evnt, time \nfrom quake group by time, category\n\tunion \nselect cat.title as category, count(evt.id) as evnt, dt as time\n\tfrom event evt\n\tjoin geometry geo ON (event_id = evt.id)\n\tjoin category cat ON (evt.category_id=cat.id) group by cat.title, dt \n\t)\n\tselect category, evnt, time from al \n  where time > $__timeFrom()  and time < $__timeTo() \n\t\tand category is not null\n",
+          "rawSql": "with al as (\nselect 'fire' as category, count(*) as evnt, time \nfrom fire group by time, category\n\tunion\nselect 'quake' as category, count(*) as evnt, time \nfrom quake group by time, category\n\tunion \nselect evt.category_id as category, count(evt.id) as evnt, dt as time\nfrom event evt\njoin geometry geo ON (event_id = evt.id)\ngroup by evt.category_id, dt \n\t)\n\tselect category, evnt, time from al \n  where time > $__timeFrom()  and time < $__timeTo() \n\t\tand category is not null\n",
           "refId": "A",
           "sql": {
             "columns": [
@@ -977,7 +990,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "WITH al as (select \nevt.title as name,\ncat.title as category,\ns.id as source_device,\nevt.id as event_code,\n1.0 as magnitude, dt\nfrom event evt\nleft join geometry geo ON (event_id = evt.id)\nleft join event_source es ON (es.event_id=evt.id)\nleft join source s ON (es.source_id=s.id)\nleft join category cat ON (evt.category_id=cat.id)\nUNION\nselect '--' as name, 'fire' as category, instrument as source_device, satellite as event_code, 1.0 as magnitude, time as dt from fire\nUNION\nselect code as name, 'quake' as category, '' as source_device, code as event_code, magnitude, time as dt from quake\n)\nselect * from al\nwhere dt > $__timeFrom()  and dt < $__timeTo() ",
+          "rawSql": "WITH al as (select \nevt.title as name,\ncat.title as category,\ns.id as source_device,\nevt.id as event_code,\nmax(coalesce(magnitudevalue, 1.0)) as magnitude, max(coalesce(magnitudeunit, '')) as magnitudeunit, max(dt) as dt\nfrom event evt\nleft join geometry geo ON (event_id = evt.id)\nleft join event_source es ON (es.event_id=evt.id)\nleft join source s ON (es.source_id=s.id)\nleft join category cat ON (evt.category_id=cat.id_txt)\ngroup by evt.title, cat.title, s.id, evt.id\nUNION\nselect '--' as name, 'fire' as category, instrument as source_device, satellite as event_code, 1.0 as magnitude, '' as unit, time as dt from fire\nUNION\nselect code as name, 'quake' as category, '' as source_device, code as event_code, magnitude, 'ML' as unit, time as dt from quake\n)\nselect * from al\nwhere dt > $__timeFrom()  and dt < $__timeTo() ",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1016,6 +1029,6 @@
   "timezone": "",
   "title": "All natural events",
   "uid": "ba850cc1-23fe-45a0-877c-3abd4afc609d",
-  "version": 30,
+  "version": 53,
   "weekStart": ""
 }

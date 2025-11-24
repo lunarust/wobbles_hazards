@@ -2,7 +2,7 @@
 
 ## Description
 
-The application will query via API calls all recent earthquakes and fire within a specific radius from the defined location set in the properties.
+The application will query via API calls all recent natural events.
 
 > still learning Rust... (⌒‿⌒)/
 
@@ -21,7 +21,7 @@ Install Rust on your local machine| to do so please follow the official document
 ### Get a local copy using git
 
 ### Properties
-Copy the file Development.toml to Default.toml and replace the values between angle brackets.
+Copy the file one of the properties to create a Default.toml, replace the values between angle brackets.
 
 ### Start the application:
 
@@ -31,6 +31,8 @@ cargo run
 ```
 
 ## Data Collected
+
+
 
 ### Earthquakes
 
@@ -45,15 +47,16 @@ API receives JSON.
 Quake:
 |  Column |  Type  |  Origin  |  Description   |
 |---------|--------|----------|----------------|
-|id|int|API|Unique ID|
-|title|String|API|Title of the event|
-|description|String|API|Description of the event|
-|link|String|API|Link|
-|closed|Null or DT|API|Null or date/time|
-|categories|Vec<categories>|API|Title of the event|
-|sources|String|API|Title of the event|
-|geometry|String|API|Title of the event|
-|magnitude||||
+|id|String|API|Unique id for this event.|
+|title|String|API|The title of the event.|
+|description|String|API|Optional longer description of the event. Most likely only a sentence or two.|
+|link|String|API|The full link to the API endpoint for this specific event.|
+|closed|DT|API|An event is deemed “closed” when it has ended. The closed field will include a date/time when the event has ended. Depending upon the nature of the event, the closed value may or may not accurately represent the absolute ending of the event. If the event is open, this will show “null”.|
+|categories|String|API|One or more categories assigned to the event.|
+|sources|Vec<String>|API|One or more sources that refer to more information about the event.|
+|geometry|Vec<>|One or more event geometries are the pairing of a specific date/time with a location. The date/time will most likely be 00:00Z unless the source provided a particular time. The geometry will be a GeoJSON object of either type “Point” or “Polygon.”|
+|magnitudeValue/Unit/Description|String|API|Information regarding the event magnitude, if available, is displayed here.|
+|Distance|f64|Calculated|Distance to the location defined in the properties|
 
 
 
@@ -63,80 +66,38 @@ Quake:
 
 ```json
 {
-    "type": "FeatureCollection"|
-    "metadata": {
-        "generated": 1763544246000|
-        "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-11-15&endtime=2025-11-19"|
-        "title": "USGS Earthquakes"|
-        "status": 200|
-        "api": "1.14.1"|
-        "count": 1056
-    }|
-    "features": [
+    "id": "EONET_15983",
+    "title": "Grey&#039;s Ditch Wildfire, Cameron, Louisiana",
+    "description": "4 Miles N from Johnson Bayou, LA",
+    "link": "https://eonet.gsfc.nasa.gov/api/v3/events/EONET_15983",
+    "closed": null,
+    "categories": [
         {
-            "type": "Feature"|
-            "properties": {
-                "mag": 1.503948263416901|
-                "place": "25 km W of Anderson| Alaska"|
-                "time": 1763509609922|
-                "updated": 1763509669273|
-                "tz": null|
-                "url": "https://earthquake.usgs.gov/earthquakes/eventpage/ak2025wtbkbf"|
-                "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=ak2025wtbkbf&format=geojson"|
-                "felt": null|
-                "cdi": null|
-                "mmi": null|
-                "alert": null|
-                "status": "automatic"|
-                "tsunami": 0|
-                "sig": 35|
-                "net": "ak"|
-                "code": "2025wtbkbf"|
-                "ids": "|ak2025wtbkbf|"|
-                "sources": "|ak|"|
-                "types": "|origin|phase-data|"|
-                "nst": 8|
-                "dmin": 0.36242613196372986|
-                "rms": 0.34305361119462996|
-                "gap": 161.23315811157227|
-                "magType": "ml"|
-                "type": "earthquake"|
-                "title": "M 1.5 - 25 km W of Anderson| Alaska"
-            }|
-            "geometry": {
-                "type": "Point"|
-                "coordinates": [
-                    -149.71719360351562|
-                    64.36441040039062|
-                    18.873268127441406
-                ]
-            }|
-            "id": "ak2025wtbkbf"
-        }  
-      ]|
-    "bbox": [
-        -179.6169|
-        -61.1895|
-        -2.95|
-        179.1443|
-        68.66081237793|
-        577.565
+            "id": "wildfires",
+            "title": "Wildfires"
+        }
+    ],
+    "sources": [
+        {
+            "id": "IRWIN",
+            "url": "https://irwin.doi.gov/observer/incidents/aa22960f-2a0b-43c0-b227-bbefcd7ed1ce"
+        }
+    ],
+    "geometry": [
+        {
+            "magnitudeValue": 601.00,
+            "magnitudeUnit": "acres",
+            "date": "2025-11-17T16:54:00Z",
+            "type": "Point",
+            "coordinates": [
+                -93.757778,
+                29.838611
+            ]
+        }
     ]
 }
 ```
 </details>
-
-
-## Database:
-### InfluxDB
-
-
-### Grafana
-
-![Grafana Dashboard](./doc/Dashboard_Final.png)
-
-
-[json Dashboard file](./doc/Dashboard_final.json)
 
 
 ## Acknowledgments
