@@ -34,7 +34,7 @@ cargo run
 
 
 
-### Earthquakes
+### Events
 
 - Source:
   - [Earth Observatory Natural Event Tracker](https://eonet.gsfc.nasa.gov)
@@ -44,7 +44,6 @@ cargo run
 
 API receives JSON.
 
-Quake:
 |  Column |  Type  |  Origin  |  Description   |
 |---------|--------|----------|----------------|
 |id|String|API|Unique id for this event.|
@@ -54,7 +53,7 @@ Quake:
 |closed|DT|API|An event is deemed “closed” when it has ended. The closed field will include a date/time when the event has ended. Depending upon the nature of the event, the closed value may or may not accurately represent the absolute ending of the event. If the event is open, this will show “null”.|
 |categories|String|API|One or more categories assigned to the event.|
 |sources|Vec<String>|API|One or more sources that refer to more information about the event.|
-|geometry|Vec<>|One or more event geometries are the pairing of a specific date/time with a location. The date/time will most likely be 00:00Z unless the source provided a particular time. The geometry will be a GeoJSON object of either type “Point” or “Polygon.”|
+|geometry|Vec<>|API|One or more event geometries are the pairing of a specific date/time with a location. The date/time will most likely be 00:00Z unless the source provided a particular time. The geometry will be a GeoJSON object of either type “Point” or “Polygon.”|
 |magnitudeValue/Unit/Description|String|API|Information regarding the event magnitude, if available, is displayed here.|
 |Distance|f64|Calculated|Distance to the location defined in the properties|
 
