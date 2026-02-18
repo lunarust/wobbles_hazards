@@ -33,6 +33,12 @@ pub struct Quake {
 	pub latitude: f64,
 	#[influxdb(field)]
 	pub depth: f64,
+	#[influxdb(field)]
+    pub dhypo: f64,
+	#[influxdb(field)]
+    pub parrival: f64,
+	#[influxdb(field)]
+    pub sarrival: f64,
     #[influxdb(timestamp)]
     pub time: i64,
 }

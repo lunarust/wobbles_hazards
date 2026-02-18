@@ -1,6 +1,8 @@
 use reqwest::Client;
 use std::time::{SystemTime, UNIX_EPOCH, Duration};
 //use std::io::Write;
+use std::f32;
+use num_traits::pow::Pow;
 use serde_json::{Result, Value};
 use geoutils::Location;
 use chrono::{DateTime, Utc};
@@ -83,10 +85,17 @@ pub async fn handle_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32, 
         // using haversine method, this is enough for this little pet project
 		let quake_location = Location::new(el.geometry.coordinates[1], el.geometry.coordinates[0]);
 		let home = Location::new(lt, lg);
+
+        let depth = el.geometry.coordinates[2];
+
 		let dist = (home.haversine_distance_to(&quake_location).meters()) / 1000.0;
+        let d_hypo = ((dist.pow(2)  as f64) + depth).sqrt();
+        let p_arrival = d_hypo / cfg.wavespeed.pwave;
+        let s_arrival = d_hypo / cfg.wavespeed.swave;
+
 		let nano_time = (el.properties.time)*1000000;
-        let message_to_send = format!("Dist. {}km, Mag {} ",
-           dist, el.properties.mag);
+        let message_to_send = format!("Dist. {:.2}km, Mag {} [P: {:.2}s - S: {:.2}s] depth: {:.2}",
+           dist, el.properties.mag, p_arrival, s_arrival,el.geometry.coordinates[2]);
 
 	    let qu: influxdb::Quake = influxdb::Quake {
             url: el.properties.url.clone().unwrap_or("".to_string()).clone(),
@@ -94,6 +103,9 @@ pub async fn handle_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32, 
 	    	code: el.properties.code.clone().unwrap_or("".to_string()).clone(),
 	    	magnitude: (el.properties.mag as f64),
 	    	distance: dist,
+            dhypo: d_hypo,
+            parrival: p_arrival,
+            sarrival: s_arrival,
 	    	longitude: el.geometry.coordinates[0],
 	    	latitude: el.geometry.coordinates[1],
 	    	depth: el.geometry.coordinates[2],

@@ -29,11 +29,11 @@ impl Pgdb {
     }
     pub async fn insert_quake(&self, qu: fluxquake::Quake)  -> Result<(), Box<dyn std::error::Error>> {
         let query = format!("
-            INSERT INTO quake (url, alert, code, magnitude, distance, geometry, depth, time)
-            VALUES ('{0}', '{1}', '{2}', {3}, {4}, Point({5}, {6}), {7}, '{8}')
+            INSERT INTO quake (url, alert, code, magnitude, distance, geometry, depth, time, dhypo, pwave, swave)
+            VALUES ('{0}', '{1}', '{2}', {3}, {4}, Point({5}, {6}), {7}, '{8}', {9}, {10}, {11})
             ON CONFLICT (code)
             DO NOTHING;",
-            qu.url, qu.alert, qu.code, qu.magnitude, qu.distance, qu.latitude, qu.longitude, qu.depth, qu.time
+            qu.url, qu.alert, qu.code, qu.magnitude, qu.distance, qu.latitude, qu.longitude, qu.depth, qu.time, qu.dhypo, qu.parrival, qu.sarrival
         );
             //println!("{:?}", qu);
 

@@ -25,6 +25,9 @@ pub struct Quake {
    pub longitude: f64,
    pub latitude: f64,
    pub depth: f64,
+   pub dhypo: f64,
+   pub parrival: f64,
+   pub sarrival: f64,
    pub time: DateTime<FixedOffset>,
 }
 
@@ -39,6 +42,9 @@ impl Default for Quake {
             longitude: 0.0,
             latitude: 0.0,
             depth: 0.0,
+            dhypo: 0.0,
+            parrival: 0.0,
+            sarrival: 0.0,
             time: FixedOffset::west_opt(0).unwrap().with_ymd_and_hms(2024, 01, 01, 0, 0, 0).unwrap(),
         }
     }

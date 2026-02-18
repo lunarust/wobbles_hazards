@@ -40,6 +40,11 @@ pub struct Alertzy {
 }
 
 #[derive(Debug, Deserialize, Clone)]
+pub struct Wavespeed {
+    pub pwave: f64,
+    pub swave: f64,
+}
+#[derive(Debug, Deserialize, Clone)]
 pub struct Settings {
     pub env: ENV,
     pub db: Db,
@@ -47,6 +52,7 @@ pub struct Settings {
     pub color: Color,
     pub nasa: Nasa,
     pub alertzy: Alertzy,
+    pub wavespeed: Wavespeed,
 }
 
 impl Settings {

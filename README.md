@@ -7,6 +7,13 @@
 1. [wobblealert](./wobblealert/README.md)
    - fetching earthquakes & fires from usgs.gov & firms.
    - Storing data in influxDB2
+   - Adding Slipper-window metric predictor > per event arrival time aknowledgement
+    - d_hypo (hypocentral distance 3D) = sqrt(d_surface² + depth²)
+      calculate P-wave arrival time (d_hypo / Vp) & S-wave arrival time (d_hypo / Vs)
+      Using average constante: Typical wave speeds
+      In continental crust:
+      P-wave speed ≈ 6 km/s
+      S-wave speed ≈ 3.5 km/s
 
 2. [hazevents](./hazevents/README.md)
    - fetching several type of disasters recorded from EONET/NASA
@@ -39,6 +46,6 @@
 # TODO / Could DO
  - [ ] Turn generic log into a library.
  - [ ] Run DB script on start if the schema doesn't exist.
- - [ ] Offer option to store the data into PostgreSQL in the settings for wobblealert. 
+ - [ ] Offer option to store the data into PostgreSQL in the settings for wobblealert.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
