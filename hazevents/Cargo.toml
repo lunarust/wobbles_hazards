@@ -30,3 +30,9 @@ futures-util = "0.3.31"
 
 
 push_phone = { version = "0.1.0", path = "../push_phone" }
+
+
+# Source - https://stackoverflow.com/a/75834695
+# Compilation issues within container
+
+openssl = { version = "0.10", features = ["vendored"] }

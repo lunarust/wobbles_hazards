@@ -7,10 +7,11 @@
 1. [wobblealert](./wobblealert/README.md)
    - fetching earthquakes & fires from usgs.gov & firms.
    - Storing data in influxDB2
-   - Adding Slipper-window metric predictor > per event arrival time aknowledgement
+   - Adding Slipper-window predictor metrics > per event arrival time acknowledgment.
+     Providing that I sometimes can feel P-Waves
     - d_hypo (hypocentral distance 3D) = sqrt(d_surface² + depth²)
       calculate P-wave arrival time (d_hypo / Vp) & S-wave arrival time (d_hypo / Vs)
-      Using average constante: Typical wave speeds
+      Using average constant: Typical wave speeds
       In continental crust:
       P-wave speed ≈ 6 km/s
       S-wave speed ≈ 3.5 km/s
