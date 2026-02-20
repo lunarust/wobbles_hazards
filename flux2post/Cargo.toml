@@ -34,7 +34,7 @@ futures = "0.3.30"
 futures-util = "0.3.31"
 
 
-// Source - https://stackoverflow.com/a/75834695
-// Compilation issues within container
+# Source - https://stackoverflow.com/a/75834695
+# Compilation issues within container
 
 openssl = { version = "0.10", features = ["vendored"] }
