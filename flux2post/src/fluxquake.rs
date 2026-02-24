@@ -63,7 +63,7 @@ impl Fluxquake {
 	    let client = Client::new(host, org, token);
 
         let qs = format!("from(bucket: \"{}\")
-                  |> range(start: -2d)
+                  |> range(start: -7d)
                   |> filter(fn: (r) => r[\"_measurement\"] == \"quake\")
                   |> group(columns: [\"_field\"])
                   |> sort(columns: [\"_time\"], desc: false)
