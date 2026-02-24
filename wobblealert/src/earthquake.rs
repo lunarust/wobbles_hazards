@@ -7,9 +7,11 @@ use serde_json::{Result, Value};
 use geoutils::Location;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use chrono::prelude::*;
 use crate::influxdb;
 use crate::settings;
 use crate::generic;
+use crate::pgdb;
 
 const RESTURL: &str = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson";
 
@@ -69,12 +71,12 @@ pub async fn handle_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32, 
 
 	let mut index: i32 = 0;
 
-    let inflx = influxdb::Influxdb {
-        dburl: cfg.db.dburl,
-   //     dbport: cfg.db.dbport,
-        dbname: cfg.db.dbname,
-        dborg: cfg.db.dborg,
-        dbapi: cfg.db.dbapi,
+    let dbconn = pgdb::Pgdb{
+       dburl: cfg.dbpg.dburl.clone(),
+       dbport: cfg.dbpg.dbport.clone(),
+       dbname: cfg.dbpg.dbname.clone(),
+       dbuser: cfg.dbpg.dbuser.clone(),
+       dbpassword: cfg.dbpg.dbpassword.clone(),
     };
 
     let mut quake_list: Vec<influxdb::Quake> = vec![];
@@ -94,8 +96,33 @@ pub async fn handle_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32, 
         let s_arrival = d_hypo / cfg.wavespeed.swave;
 
 		let nano_time = (el.properties.time)*1000000;
-        let message_to_send = format!("Dist. {:.2}km, Mag {} [P: {:.2}s - S: {:.2}s] depth: {:.2}",
-           dist, el.properties.mag, p_arrival, s_arrival,el.geometry.coordinates[2]);
+//        let dt_time = DateTime::from_timestamp(el.properties.time, 0);
+
+        //let dt_nano_utc = (el.properties.time/1000000000) as u64;
+        let test = el.properties.time / 1000;
+        let d = UNIX_EPOCH + Duration::from_secs(test.try_into().unwrap());
+	    let datetime = DateTime::<Utc>::from(d);
+	    let timestamp_str = datetime.format("%v %H:%M").to_string();
+
+        let message_to_send = format!("@{:?} Dist. {:.2}km, Mag {} [P: {:.2}s - S: {:.2}s] depth: {:.2}",
+           timestamp_str, dist, el.properties.mag, p_arrival, s_arrival,el.geometry.coordinates[2]);
+
+        //println!("timestamp_str: {:?} datetime: {:?} from el {:?}", timestamp_str, datetime, el.properties.time);
+
+        pgdb::Pgdb::insert_quake(&dbconn,
+            el.properties.url.clone().unwrap_or("".to_string()).clone(),
+            el.properties.alert.clone().unwrap_or("green".to_string()).clone(),
+	    	el.properties.code.clone().unwrap_or("".to_string()).clone(),
+	    	(el.properties.mag as f64),
+	    	dist,
+            el.geometry.coordinates[1],
+            el.geometry.coordinates[0],
+            el.geometry.coordinates[2],
+            timestamp_str,
+            d_hypo,
+            p_arrival,
+            s_arrival
+        ).await;
 
 	    let qu: influxdb::Quake = influxdb::Quake {
             url: el.properties.url.clone().unwrap_or("".to_string()).clone(),
@@ -158,32 +185,17 @@ pub async fn handle_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32, 
         .expect("Should be able to write to i3 config");
 
 		// Lastly reporting to influxdb
-		let rep: influxdb::LastReport = influxdb::LastReport {
+        /*let rep: influxdb::LastReport = influxdb::LastReport {
 			code: iterator.code.clone(),
 			result: quake_list.len() as u64,
 			time: timestamp_nanos as i64,
 		};
 		report_list.push(rep);
-		let _ = influxdb::Influxdb::dump_report(&inflx.clone(), report_list).await;
+        */
+        //let _ = influxdb::Influxdb::dump_report(&inflx.clone(), report_list).await;
 	    generic::logthis(format!("Event recorded: M:{} D:{} @{}", iterator.magnitude, iterator.distance, timestamp_str).as_str(), "ALERT")
 
 	}
-	else {
-		let rep: influxdb::LastReport = influxdb::LastReport {
-			code: "Empty".to_string(),
-			result: 0.0 as u64,
-			time: timestamp_nanos as i64,
-		};
-		report_list.push(rep);
-		let _res = influxdb::Influxdb::dump_report(&inflx.clone(), report_list).await;
-		//println!("Pushing data... {:?}", res);
-
-	}
-
-	// pushing data to influxdb
-	let _res = influxdb::Influxdb::dump(&inflx.clone(), quake_list).await;
-	//println!("Pushing data... {:?}", res);
-
 
 	Ok(())
 }

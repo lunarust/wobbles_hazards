@@ -9,6 +9,7 @@ mod settings;
 mod earthquake;
 mod influxdb;
 mod firms;
+mod pgdb;
 
 lazy_static! {
     pub static ref CONFIG: settings::Settings =
@@ -26,14 +27,25 @@ async fn main() {
         dborg: CONFIG.db.dborg.clone(),
     };
 
+    let dbconn = pgdb::Pgdb{
+       dburl: CONFIG.dbpg.dburl.clone(),
+       dbport: CONFIG.dbpg.dbport.clone(),
+       dbname: CONFIG.dbpg.dbname.clone(),
+       dbuser: CONFIG.dbpg.dbuser.clone(),
+       dbpassword: CONFIG.dbpg.dbpassword.clone(),
+    };
+
+    let last_entry: DateTime<Utc> = pgdb::Pgdb::get_last(&dbconn).await.unwrap();
+
     let lg = CONFIG.location.longitude.clone();
     let lt = CONFIG.location.latitude.clone();
     let rd = CONFIG.location.radius.clone();
     let file = CONFIG.location.file.clone();
 
-    let last_entry: DateTime<FixedOffset> = influxdb::Influxdb::check_connection(&influxdb).await;
+    //let last_entry: DateTime<FixedOffset> = influxdb::Influxdb::check_connection(&influxdb).await;
     //println!("{:?}", last_entry.format("%Y-%m-%dT%H:%M:%S").to_string());
     let call_dbdate = last_entry + Duration::minutes(10);
+    //let call_dbdate = last_entry - Duration::minutes(180);
     engage(file.as_str(), lg, lt, rd, call_dbdate.format("%Y-%m-%dT%H:%M:%S").to_string()).await.map_err(|err| println!("{:?}", err)).ok();
 
     // Get fire events

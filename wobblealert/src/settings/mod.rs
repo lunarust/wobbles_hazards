@@ -21,6 +21,14 @@ pub struct Db {
 }
 
 #[derive(Debug, Deserialize, Clone)]
+pub struct Dbpg {
+    pub dburl: String,
+    pub dbport: u16,
+    pub dbname: String,
+    pub dbuser: String,
+    pub dbpassword: String,
+}
+#[derive(Debug, Deserialize, Clone)]
 pub struct Color {
     pub green: String,
     pub yellow: String,
@@ -53,6 +61,7 @@ pub struct Settings {
     pub nasa: Nasa,
     pub alertzy: Alertzy,
     pub wavespeed: Wavespeed,
+    pub dbpg: Dbpg,    
 }
 
 impl Settings {
