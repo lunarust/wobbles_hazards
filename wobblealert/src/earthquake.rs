@@ -104,8 +104,8 @@ pub async fn handle_call(stdt: String, endt: String, lg: f64, lt: f64, rd: i32, 
 	    let datetime = DateTime::<Utc>::from(d);
 	    let timestamp_str = datetime.format("%v %H:%M").to_string();
 
-        let message_to_send = format!("@{:?} Dist. {:.2}km, Mag {} [P: {:.2}s - S: {:.2}s] depth: {:.2}",
-           timestamp_str, dist, el.properties.mag, p_arrival, s_arrival,el.geometry.coordinates[2]);
+        let message_to_send = format!("@{} - {} Dist. {:.2}km, Mag {} [P: {:.2}s - S: {:.2}s] depth: {:.2}",
+           timestamp_str, el.properties.place.clone().unwrap(), dist, el.properties.mag, p_arrival, s_arrival,el.geometry.coordinates[2]);
 
         //println!("timestamp_str: {:?} datetime: {:?} from el {:?}", timestamp_str, datetime, el.properties.time);
 

@@ -72,6 +72,20 @@ impl Pgdb {
         //println!("{:?}", res);
         Ok(())
     }
+    pub async fn insert_fire(&self, instrument: String, confidence: String, daynight: String, satellite: String,
+    latitude: f64, longitude: f64, bright_ti4: f64, frp: f64, distance: f64, typ: String, time: i64)  -> Result<(), Box<dyn std::error::Error>> {
+        let query = format!("
+            INSERT INTO fire (instrument, confidence, daynight, satellite, geometry, bright_ti4, frp, distance, typ, time)
+            VALUES ('{0}', '{1}', '{2}', '{3}', Point({4}, {5}), {6}, {7}, {8}, '{9}', '{10}')
+            ON CONFLICT (instrument, bright_ti4, time)
+            DO NOTHING;",
+            instrument, confidence, daynight, satellite, latitude, longitude, bright_ti4, frp, distance, typ, time
+        );
+            //println!("{:?}", qu);
+
+        let res = (&self).connect_insert(query.as_str()).await;
+        Ok(())
+    }
     /*
     pub async fn insert_fire(&self, qu: fluxfire::Fire)  -> Result<(), Box<dyn std::error::Error>> {
         let query = format!("
